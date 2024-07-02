@@ -1,0 +1,23 @@
+  fruit:
+    yellow:
+      banana
+    orange:
+      orange
+    red:
+      strawberry
+      tomato
+    purple:
+      grapes
+    green:
+      watermelon
+    total: 6
+
+  veg:
+    green:
+      brocolli
+      cabbage
+      peppers
+      lettuce
+    orange:
+      carrot
+    total: 5
