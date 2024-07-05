@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  webapp-deployment
+  labels:
+    app:  webapp
+spec:
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app:  webapp
+    spec:
+      containers:
+      - image:  nanajanashia/k8s-demo-app:v1.0
+        name:  mongo
+        resources:
+          limits:
+            memory: "200Mi"
+            cpu: "200m"      
+        ports:
+        - containerPort:  8080
+        env:
+        - name: USER_NAME
+          valueFrom: 
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-user
+        - name: USER_PWD
+          valueFrom: 
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-password
+        - name: DB_URL
+          valueFrom: 
+            configMapKeyRef:
+              name: mongoconfig
+              key: mongo-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  webapp-service
+spec:
+  type: ClusterIP
+  selector:
+    app:  webapp
+  ports:
+  # - protocol:  TCP
+  - port:  8080
+    targetPort:  8080
